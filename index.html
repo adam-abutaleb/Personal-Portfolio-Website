@@ -530,5 +530,126 @@ $("#copy").onclick=()=>{const t=$("#email").textContent,b=$("#copy");
   try{navigator.clipboard.writeText(t).then(()=>{b.textContent="Copied"},sel)}catch(e){sel()}
   setTimeout(()=>b.textContent="Copy email",2200);};
 </script>
+<!-- ===== Ask Adam: a scripted chatbot. No AI model; every answer below is written ahead of time. ===== -->
+<style>
+.ask-launch{position:fixed;z-index:45;left:max(20px,env(safe-area-inset-left,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:10px;
+  border:0;border-radius:999px;padding:8px 18px 8px 8px;background:var(--ink);color:var(--tile);font:600 .92rem var(--f-body);cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.ask-launch:hover{transform:translateY(-2px)}
+.ask-ava{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;font:700 1rem var(--f-display);letter-spacing:.02em;color:#fff;
+  background:radial-gradient(circle at 50% 50%,var(--water) 0 55%,transparent 56%),conic-gradient(var(--rope-a) 0 25%,#fff 0 50%,var(--rope-a) 0 75%,#fff 0)}
+.ask-panel{position:fixed;z-index:46;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));width:min(380px,calc(100vw - 32px));height:min(560px,calc(100vh - 120px));
+  display:flex;flex-direction:column;background:var(--tile);border:1px solid var(--grout);border-radius:16px;overflow:hidden;box-shadow:0 18px 48px rgba(0,0,0,.25)}
+.ask-panel[hidden]{display:none}
+.ask-head{display:flex;align-items:center;gap:12px;padding:12px 14px;background:linear-gradient(170deg,var(--hero-a),var(--hero-b));color:var(--hero-ink)}
+.ask-head b{display:block;font:700 1.15rem var(--f-display);text-transform:uppercase;letter-spacing:.03em}
+.ask-head small{font:400 .7rem var(--f-mono);opacity:.85}
+.ask-x{margin-left:auto;background:none;border:1px solid currentColor;color:inherit;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1rem}
+.ask-log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:85%;padding:9px 13px;border-radius:14px;font-size:.92rem;line-height:1.45;overflow-wrap:anywhere}
+.msg.me{align-self:flex-start;background:var(--tile-2);border:1px solid var(--grout);border-bottom-left-radius:4px}
+.msg.you{align-self:flex-end;background:var(--water);color:var(--tile);border-bottom-right-radius:4px}
+.msg a{color:var(--water);font-weight:600}
+.msg .go{display:inline-block;margin-top:8px;border:1px solid var(--water);color:var(--water);background:none;border-radius:999px;padding:3px 12px;font:600 .8rem var(--f-body);cursor:pointer}
+.typing{display:inline-flex;gap:4px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--mute);animation:bob 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bob{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+.ask-sugg{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 10px}
+.ask-sugg button{border:1px solid var(--grout);background:var(--tile-2);color:var(--ink);border-radius:999px;padding:5px 11px;font:500 .8rem var(--f-body);cursor:pointer;text-align:left}
+.ask-sugg button:hover{border-color:var(--water);color:var(--water)}
+.ask-form{display:flex;gap:8px;padding:10px 14px 14px;border-top:1px solid var(--grout)}
+.ask-form input{flex:1;min-width:0;border:1px solid var(--grout);background:var(--tile-2);color:var(--ink);border-radius:999px;padding:9px 14px;font:inherit;font-size:.9rem}
+.ask-form button{border:0;background:var(--water);color:var(--tile);border-radius:999px;padding:0 16px;font:600 .88rem var(--f-body);cursor:pointer}
+.ask-note{font:400 .66rem var(--f-mono);color:var(--mute);text-align:center;padding:0 14px 10px}
+@media (max-width:899px){.ask-launch,.ask-panel{bottom:calc(76px + env(safe-area-inset-bottom,0px))}.ask-panel{height:min(520px,calc(100vh - 150px))}}
+@media (prefers-reduced-motion:reduce){.typing i{animation:none}}
+</style>
+
+<button class="ask-launch" id="askLaunch" aria-expanded="false" aria-controls="askPanel"><span class="ask-ava" aria-hidden="true">AA</span>Ask me anything</button>
+<section class="ask-panel" id="askPanel" role="dialog" aria-label="Chat with Adam" hidden>
+  <div class="ask-head"><span class="ask-ava" aria-hidden="true">AA</span><div><b>Ask Adam</b><small>pre-written answers · not live AI</small></div><button class="ask-x" id="askClose" aria-label="Close chat">✕</button></div>
+  <div class="ask-log" id="askLog" aria-live="polite"></div>
+  <div class="ask-sugg" id="askSugg"></div>
+  <form class="ask-form" id="askForm"><input id="askInput" autocomplete="off" placeholder="Type a question…" aria-label="Your question" maxlength="200"><button type="submit">Send</button></form>
+  <div class="ask-note">A small scripted bot. It only knows a few things about me.</div>
+</section>
+
+<script>
+(function(){
+/* Every answer is fixed. `keys` are words that trigger it; `q` is how it appears as a suggested question.
+   `go` adds a button that scrolls to a section of the page; `link` adds a link. */
+const ANSWERS=[
+ {id:"hi",keys:["hi","hello","hey","yo","sup","morning","afternoon","evening"],
+  a:"Hey! I'm Adam, or at least a pool-sized version of him. Ask me about my projects, school, skills or how to reach me."},
+ {id:"who",q:"Who are you?",keys:["who","yourself","about you","introduce","adam"],
+  a:"I'm Adam Abutaleb, a sophomore at Worcester State University double-majoring in Computer Science and Mathematics. I build things in Java and Python, and when I'm not coding I'm teaching kids to swim."},
+ {id:"school",q:"What are you studying?",keys:["study","studying","major","school","college","university","degree","gpa","grades","worcester","class","classes","courses","coursework","graduate"],
+  a:"A B.S. in Computer Science and a B.S. in Mathematics at Worcester State, graduating May 2029. I have a 4.0 GPA and made the Dean's List in Fall 2025 and Spring 2026. Right now I'm taking Data Structures & Algorithms, Probability & Statistics, Discrete Structures, Database Design and Calculus II.",go:["See my coursework","log"]},
+ {id:"projects",q:"What have you built?",keys:["project","projects","built","build","made","portfolio","work on","github"],
+  a:"Two main projects so far: a Fitness Center Management System in Java, and a terminal Tic-Tac-Toe game in Python. You can try small versions of both on this page.",go:["Go to projects","projects"]},
+ {id:"fitness",q:"Tell me about the Fitness Center project",keys:["fitness","gym","trainer","trainers","java project","management"],
+  a:"It's a multi-class Java app that manages gym members and trainers for up to 100 users. Members rate trainers in a 2D array, and the program averages and ranks them. It also handles input validation, overtime pay, BMI classification, salary projections and bonus eligibility. I used encapsulation, overloaded constructors and getters/setters to keep it modular.",go:["Try the ratings demo","projects"]},
+ {id:"ttt",q:"Why Tic-Tac-Toe?",keys:["tic","tac","toe","tictactoe","game","python project"],
+  a:"I built it on my own, outside of class, to drill the fundamentals. The board is a 2D list, it checks rows, columns and diagonals for a win, and it handles bad input (letters, out-of-range squares, taken squares) without crashing. There's a playable version on this page!",go:["Play a round","projects"]},
+ {id:"skills",q:"What languages do you know?",keys:["language","languages","skill","skills","stack","tech","know","java","python","html","css","javascript","git","tools"],
+  a:"Java and Python are my main languages, plus HTML, CSS and JavaScript (like this site). I'm comfortable with object-oriented programming, data structures, algorithms, debugging, Git, GitLab, VS Code and the command line.",go:["See my toolkit","toolkit"]},
+ {id:"job",q:"Where do you work?",keys:["job","jobs","work","working","experience","goldfish","swim school","instructor","teacher","employ"],
+  a:"I've worked at Goldfish Swim School since July 2024. I was promoted to Golden Teacher, a title for top-performing instructors, and I help train new instructors. I teach kids ages 3–12, up to four at a time, and I'm a certified lifeguard.",go:["See my timeline","lanes"]},
+ {id:"intern",q:"Are you looking for an internship?",keys:["intern","internship","hire","hiring","available","summer","opportunity","role","position","looking"],
+  a:"Yes! I'm looking for a software engineering internship for Summer 2027. If you have something in mind, email me at aabutaleb2007@gmail.com.",link:["Open my résumé","resume.pdf"]},
+ {id:"contact",q:"How can I reach you?",keys:["contact","email","reach","linkedin","message","connect","talk"],
+  a:"Email is best: aabutaleb2007@gmail.com. You can also find me on LinkedIn and GitHub.",link:["LinkedIn","https://www.linkedin.com/in/adam-a-372943383"],go:["Contact section","exit"]},
+ {id:"resume",q:"Can I see your résumé?",keys:["resume","résumé","cv"],
+  a:"Of course, here it is as a PDF.",link:["Open my résumé","resume.pdf"]},
+ {id:"fun",q:"What do you do for fun?",keys:["fun","hobby","hobbies","free time","outside","swim","swimming","sport","sports"],
+  a:"Swimming, pretty much always. I teach it, I lifeguard, and I swam varsity for Shrewsbury High School.",go:["Visit the deep end","deep"]},
+ {id:"bot",keys:["bot","ai","real","chatgpt","gpt","robot","human","are you real"],
+  a:"I'm a simple scripted bot with about a dozen pre-written answers, not a live AI. For anything I can't answer, the real Adam reads his email: aabutaleb2007@gmail.com."},
+ {id:"thanks",keys:["thanks","thank","thx","ty","cool","awesome","nice","great","bye"],
+  a:"Thanks for stopping by! Hope to hear from you."}
+];
+const FALLBACK="I only know a few things, so I don't have an answer for that one. Try one of the questions below, or email the real me at aabutaleb2007@gmail.com.";
+
+const $=id=>document.getElementById(id);
+const launch=$("askLaunch"),panel=$("askPanel"),log=$("askLog"),sugg=$("askSugg"),form=$("askForm"),input=$("askInput");
+const asked=new Set();let started=false,busy=false;
+const still=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function norm(s){return " "+s.toLowerCase().replace(/[^a-z0-9é\s]/g," ").replace(/\s+/g," ").trim()+" "}
+function match(text){
+  const t=norm(text);let best=null,score=0;
+  for(const r of ANSWERS){let s=0;for(const k of r.keys){if(t.includes(" "+k+" "))s+=k.split(" ").length+(k.length>4?1:0);}
+    if(s>score){score=s;best=r;}}
+  return best;
+}
+function bubble(who,text,r){
+  const d=document.createElement("div");d.className="msg "+who;d.textContent=text;
+  if(r&&r.link){d.append(document.createElement("br"));const a=document.createElement("a");a.href=r.link[1];a.target="_blank";a.rel="noopener";a.textContent=r.link[0]+" ↗";d.append(a);}
+  if(r&&r.go){d.append(document.createElement("br"));const b=document.createElement("button");b.type="button";b.className="go";b.textContent=r.go[0]+" →";
+    b.onclick=()=>{const el=document.getElementById(r.go[1]);if(el)el.scrollIntoView({behavior:still?"auto":"smooth"});if(innerWidth<600)close();};d.append(b);}
+  log.append(d);log.scrollTop=log.scrollHeight;return d;
+}
+function renderSugg(){
+  const left=ANSWERS.filter(r=>r.q&&!asked.has(r.id)).slice(0,3);
+  sugg.replaceChildren(...left.map(r=>{const b=document.createElement("button");b.type="button";b.textContent=r.q;b.onclick=()=>ask(r.q,r);return b;}));
+}
+function reply(r){
+  busy=true;const t=document.createElement("div");t.className="msg me";t.innerHTML='<span class="typing" aria-label="Adam is typing"><i></i><i></i><i></i></span>';log.append(t);log.scrollTop=log.scrollHeight;
+  setTimeout(()=>{t.remove();bubble("me",r?r.a:FALLBACK,r);busy=false;renderSugg();},still?0:500+Math.random()*400);
+}
+function ask(text,forced){
+  if(busy||!text.trim())return;bubble("you",text.trim());
+  const r=forced||match(text);if(r)asked.add(r.id);reply(r);
+}
+function open(){panel.hidden=false;launch.hidden=true;launch.setAttribute("aria-expanded","true");
+  if(!started){started=true;bubble("me","Hi, I'm Adam 👋 Well, a scripted version of me. Pick a question below or type your own.");renderSugg();}
+  input.focus();}
+function close(){panel.hidden=true;launch.hidden=false;launch.setAttribute("aria-expanded","false");launch.focus();}
+launch.onclick=open;$("askClose").onclick=close;
+panel.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
+form.onsubmit=e=>{e.preventDefault();const v=input.value;input.value="";ask(v);};
+})();
+</script>
+<!-- ===== end Ask Adam ===== -->
 </body>
 </html>
