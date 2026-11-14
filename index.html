@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Adam Abutaleb: Computer Science and Mathematics student at Worcester State University, looking for a Summer 2027 software engineering internship.">
+<meta property="og:title" content="Adam Abutaleb">
+<meta property="og:description" content="CS & Math at Worcester State. Projects, coursework and contact.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230e88ad'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='8' cy='16' r='3'/%3E%3Ccircle cx='16' cy='16' r='3'/%3E%3Ccircle cx='24' cy='16' r='3'/%3E%3C/g%3E%3C/svg%3E">
+<title>Adam Abutaleb</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a pool seen from the deck. You scroll from the shallow end to the deep end; each section is a depth marker,
+   lane ropes divide sections, and a depth gauge on the right is the navigation. */
+:root{
+  --tile:#f3f8f8;      /* page ground: tile white */
+  --tile-2:#e4f0f2;    /* raised surface */
+  --grout:#cfe2e7;     /* hairlines, tile grid */
+  --ink:#0b3a55;       /* text */
+  --mute:#4f7487;      /* secondary text */
+  --water:#0e88ad;     /* accent */
+  --rope-a:#e2483d;    /* lane rope red */
+  --rope-b:#1f5fd1;    /* lane rope blue */
+  --gold:#c98a12;      /* highlights */
+  --hero-a:#8fdcec; --hero-b:#1b8fb8; --hero-ink:#ffffff; --caustic:255,255,255;
+  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --tile:#061f2e;--tile-2:#0b2d41;--grout:#15405a;--ink:#e3f3f7;--mute:#8db2c3;--water:#3cc6e4;--rope-a:#ff6f61;--rope-b:#6f9cff;--gold:#f2c14e;
+  --hero-a:#0d4d6b;--hero-b:#04192a;--hero-ink:#e8f7fb;--caustic:120,220,245;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --tile:#061f2e;--tile-2:#0b2d41;--grout:#15405a;--ink:#e3f3f7;--mute:#8db2c3;--water:#3cc6e4;--rope-a:#ff6f61;--rope-b:#6f9cff;--gold:#f2c14e;
+  --hero-a:#0d4d6b;--hero-b:#04192a;--hero-ink:#e8f7fb;--caustic:120,220,245;color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{background:var(--tile);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;overflow-x:hidden;
+  background-image:linear-gradient(var(--grout) 1px,transparent 1px),linear-gradient(90deg,var(--grout) 1px,transparent 1px);background-size:48px 48px;background-attachment:fixed}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--water);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+@media (min-width:900px){.wrap{padding-right:max(96px,env(safe-area-inset-right,0px))}}
+.mono{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.02em}
+.depth{display:inline-flex;align-items:baseline;gap:10px;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:.95rem;color:var(--water)}
+.depth b{font-size:1.5rem;letter-spacing:0;padding:2px 10px;border:2px solid currentColor;border-radius:4px;line-height:1.1}
+
+/* lane rope divider */
+.rope{height:14px;margin:0;border:0;
+  background:
+    radial-gradient(circle,var(--rope-a) 0 5px,transparent 5.5px) 0 50%/28px 14px repeat-x,
+    radial-gradient(circle,var(--rope-b) 0 5px,transparent 5.5px) 14px 50%/28px 14px repeat-x,
+    linear-gradient(var(--mute),var(--mute)) 0 50%/100% 1px no-repeat}
+
+/* depth gauge rail */
+.gauge{position:fixed;z-index:40;right:max(18px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%)}
+.gauge ol{list-style:none;margin:0;padding:0 0 0 0;position:relative;display:grid;gap:18px}
+.gauge ol::before{content:"";position:absolute;right:5px;top:6px;bottom:6px;width:2px;background:var(--grout)}
+.gauge a{display:flex;align-items:center;justify-content:flex-end;gap:10px;text-decoration:none;font-family:var(--f-mono);font-size:.72rem;color:var(--mute);position:relative}
+.gauge a .nm{opacity:0;transform:translateX(6px);transition:.2s;white-space:nowrap;background:var(--tile-2);border:1px solid var(--grout);padding:2px 8px;border-radius:4px;color:var(--ink)}
+.gauge a:hover .nm,.gauge a:focus-visible .nm{opacity:1;transform:none}
+.gauge a .tk{width:12px;height:2px;background:currentColor;position:relative;z-index:1}
+.gauge a[aria-current="true"]{color:var(--water);font-weight:500}
+.gauge a[aria-current="true"] .tk{width:12px;height:12px;border-radius:50%;background:var(--water);box-shadow:0 0 0 4px color-mix(in srgb,var(--water) 25%,transparent)}
+.gauge .lvl{position:absolute;right:4px;top:0;width:4px;border-radius:2px;background:var(--water);opacity:.35;pointer-events:none}
+@media (max-width:899px){
+  .gauge{top:auto;bottom:0;left:0;right:0;transform:none;background:color-mix(in srgb,var(--tile) 92%,transparent);backdrop-filter:blur(8px);border-top:1px solid var(--grout);
+    padding:8px max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}
+  .gauge ol{display:flex;gap:4px;justify-content:space-between;overflow-x:auto}
+  .gauge ol::before,.gauge .lvl,.gauge a .nm{display:none}
+  .gauge a{padding:6px 6px;border-radius:6px}
+  .gauge a .tk{display:none}
+  .gauge a[aria-current="true"]{background:var(--tile-2)}
+  body{padding-bottom:64px}
+}
+
+/* hero: looking down into the shallow end */
+.hero{position:relative;overflow:hidden;background:linear-gradient(170deg,var(--hero-a),var(--hero-b));color:var(--hero-ink)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero .wrap{position:relative;z-index:1;padding-block:72px 64px;display:grid;gap:18px}
+.hero .depth{color:var(--hero-ink)}
+.hero h1{font-family:var(--f-display);font-weight:700;text-transform:uppercase;font-size:clamp(3.6rem,12vw,8.5rem);line-height:.86;margin:6px 0 0;letter-spacing:-.01em;text-wrap:balance}
+.hero .lede{font-size:1.15rem;max-width:46ch;margin:0}
+.splits{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.splits span{font-family:var(--f-mono);font-size:.8rem;border:1px solid color-mix(in srgb,var(--hero-ink) 45%,transparent);border-radius:999px;padding:4px 12px;background:color-mix(in srgb,var(--hero-b) 30%,transparent)}
+.hero .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
+.pill{display:inline-flex;align-items:center;gap:8px;text-decoration:none;border-radius:999px;padding:10px 18px;font-weight:600;font-size:.92rem;border:1.5px solid currentColor;background:none;color:inherit;cursor:pointer;font-family:inherit}
+.pill.solid{background:var(--hero-ink);color:var(--hero-b);border-color:var(--hero-ink)}
+.pill:hover{transform:translateY(-1px)}
+
+/* sections */
+section.pool{padding-block:72px 64px}
+.head{display:grid;gap:8px;margin-bottom:34px}
+.head h2{font-family:var(--f-display);font-weight:700;text-transform:uppercase;font-size:clamp(2.4rem,6vw,4rem);line-height:.95;margin:0;text-wrap:balance}
+.head p{color:var(--mute);max-width:60ch;margin:0}
+.card{background:var(--tile-2);border:1px solid var(--grout);border-radius:10px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.chip{border:1px solid var(--grout);background:var(--tile);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-size:.85rem;cursor:pointer}
+.chip span{font-family:var(--f-mono);font-size:.72rem;color:var(--mute);margin-left:6px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--tile);border-color:var(--ink)}
+.chip[aria-pressed="true"] span{color:inherit;opacity:.7}
+
+/* swim lanes timeline */
+.lanes{padding:18px;overflow-x:auto}
+.lanes svg{display:block;width:100%;min-width:680px;height:auto}
+.lanes text{font-family:var(--f-mono);font-size:10px;fill:var(--mute)}
+.lanes .lname{font-family:var(--f-display);font-size:14px;font-weight:600;fill:var(--ink);text-transform:uppercase;letter-spacing:.04em}
+.lanes .lnum{font-family:var(--f-display);font-size:20px;font-weight:700;fill:var(--water)}
+.lanes .float-a{fill:var(--rope-a)} .lanes .float-b{fill:var(--rope-b)}
+.lanes .grid{stroke:var(--grout)} .lanes .now{stroke:var(--gold)} .lanes .nowt{fill:var(--gold)}
+.lanes .swim{cursor:pointer}
+.lanes .swim .bar{stroke-width:10;stroke-linecap:round}
+.lanes .swim:hover .bar,.lanes .swim:focus .bar{stroke-width:14}
+.lanes .k-work .bar{stroke:var(--water)} .lanes .k-school .bar{stroke:var(--rope-b)} .lanes .k-team .bar{stroke:var(--rope-a)}
+.lanes .k-work .head-dot{fill:var(--water)} .lanes .k-school .head-dot{fill:var(--rope-b)} .lanes .k-team .head-dot{fill:var(--rope-a)}
+.lanes .ahead{stroke-dasharray:2 10;opacity:.6}
+.key{display:flex;flex-wrap:wrap;gap:18px;margin-top:12px;font-size:.82rem;color:var(--mute)}
+.key i{display:inline-block;width:20px;height:6px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.entries{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:16px;margin-top:28px}
+.entry{padding:22px;transition:box-shadow .3s,border-color .3s;min-width:0}
+.entry.flash{border-color:var(--water);box-shadow:0 0 0 4px color-mix(in srgb,var(--water) 25%,transparent)}
+.entry .top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--mute)}
+.entry h3{font-family:var(--f-display);font-size:1.7rem;font-weight:600;text-transform:uppercase;margin:6px 0 0;line-height:1.05}
+.entry .org{color:var(--water);font-weight:600;margin:2px 0 10px}
+.entry ul{margin:0;padding-left:1.1em;color:var(--mute);font-size:.94rem}
+.entry li{margin:.3em 0}
+
+/* projects */
+.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:20px}
+.proj{padding:24px;display:grid;gap:14px;align-content:start;min-width:0}
+.proj .lane{display:flex;justify-content:space-between;align-items:center;color:var(--mute)}
+.proj .lane b{font-family:var(--f-display);font-size:2.4rem;line-height:1;color:var(--water)}
+.proj h3{font-family:var(--f-display);font-size:2rem;text-transform:uppercase;margin:0;line-height:1}
+.proj p{margin:0;color:var(--mute)}
+.stack{display:flex;flex-wrap:wrap;gap:6px}
+.stack span{font-family:var(--f-mono);font-size:.72rem;padding:3px 9px;border-radius:4px;background:var(--tile);border:1px solid var(--grout)}
+.demo{background:var(--tile);border:1px dashed var(--grout);border-radius:8px;padding:16px;display:grid;gap:12px}
+.demo .cap{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--mute)}
+.ttt{display:grid;grid-template-columns:repeat(3,64px);gap:6px;justify-content:center}
+.ttt button{width:64px;height:64px;border-radius:8px;border:1px solid var(--grout);background:var(--tile-2);font-family:var(--f-display);font-size:2rem;font-weight:700;color:var(--ink);cursor:pointer}
+.ttt button.x{color:var(--rope-a)} .ttt button.o{color:var(--rope-b)}
+.ttt button.win{background:color-mix(in srgb,var(--gold) 30%,var(--tile-2))}
+.status{text-align:center;font-weight:600;min-height:1.6em}
+.links{display:flex;flex-wrap:wrap;gap:16px}
+.links a{font-weight:600;font-size:.9rem;color:var(--water);text-decoration:none;border-bottom:1.5px solid currentColor}
+table.matrix{border-collapse:collapse;width:100%;font-family:var(--f-mono);font-size:.78rem}
+.matrix th,.matrix td{border:1px solid var(--grout);padding:5px 6px;text-align:center}
+.matrix th{color:var(--mute);font-weight:500}
+.matrix tfoot td{color:var(--water);font-weight:500}
+.rank{display:grid;gap:6px}
+.rank div{display:grid;grid-template-columns:90px 1fr 42px;gap:8px;align-items:center;font-size:.85rem}
+.rank i{display:block;height:10px;border-radius:5px;background:var(--water);transition:width .5s}
+.rank em{font-style:normal;font-family:var(--f-mono);font-size:.78rem;text-align:right}
+.small-btn{border:1px solid var(--water);color:var(--water);background:none;border-radius:999px;padding:5px 14px;font:inherit;font-size:.82rem;cursor:pointer}
+.small-btn:hover{background:var(--water);color:var(--tile)}
+
+/* training log */
+.log{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.log .card{padding:20px}
+.log h3{font-family:var(--f-display);text-transform:uppercase;margin:0 0 12px;font-size:1.3rem}
+.log ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.log li{display:flex;align-items:center;gap:10px}
+.log li i{width:22px;height:22px;border-radius:50%;border:2px solid var(--water);flex:none}
+.log li.done i{background:var(--water)}
+.log li.now i{background:linear-gradient(90deg,var(--water) 50%,transparent 50%)}
+
+/* results board */
+.board{overflow-x:auto}
+.board table{width:100%;border-collapse:collapse;min-width:560px}
+.board th{font-family:var(--f-mono);font-size:.72rem;font-weight:500;color:var(--mute);text-align:left;padding:10px 16px;border-bottom:2px solid var(--ink)}
+.board td{padding:14px 16px;border-bottom:1px solid var(--grout);vertical-align:top}
+.board td.pl{font-family:var(--f-display);font-size:1.6rem;font-weight:700;color:var(--water);width:56px}
+.board td.ev b{display:block;font-family:var(--f-display);font-size:1.25rem;text-transform:uppercase;font-weight:600}
+.board td.ev span{color:var(--mute);font-size:.88rem}
+.board td.mk{font-family:var(--f-mono);font-size:.95rem;white-space:nowrap}
+.board td.wh{font-family:var(--f-mono);font-size:.78rem;color:var(--mute);white-space:nowrap}
+
+/* toolkit + heat sheet */
+.kit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,320px);gap:28px;align-items:start}
+.group{margin-bottom:22px}
+.group h3{font-family:var(--f-mono);font-size:.75rem;font-weight:500;color:var(--mute);margin:0 0 10px;text-transform:uppercase;letter-spacing:.08em}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{border:1px solid var(--grout);background:var(--tile-2);color:var(--ink);border-radius:6px;padding:7px 13px;font:inherit;font-size:.9rem;cursor:pointer}
+.tag[aria-pressed="true"]{background:var(--water);border-color:var(--water);color:var(--tile)}
+.heat{padding:20px;position:sticky;top:24px}
+.heat .mono{color:var(--mute)}
+.heat h3{font-family:var(--f-display);font-size:2rem;text-transform:uppercase;margin:4px 0 12px;line-height:1}
+.heat ol{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.heat li{display:grid;grid-template-columns:28px 1fr;gap:8px;padding:10px 0;border-top:1px solid var(--grout)}
+.heat li b{font-family:var(--f-display);color:var(--water);font-size:1.2rem}
+.heat li small{display:block;color:var(--mute)}
+@media (max-width:760px){.kit{grid-template-columns:1fr}.heat{position:static}}
+
+/* deep end */
+.strokes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.deep{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:center}
+.deep .art{aspect-ratio:16/10;max-width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--grout)}
+.deep .art svg{width:100%;height:100%;display:block}
+.deep .art .w1{fill:var(--hero-a)} .deep .art .w2{fill:var(--hero-b)} .deep .art .ra{fill:var(--rope-a)} .deep .art .rb{fill:var(--rope-b)} .deep .art .ink{fill:var(--hero-ink)} .deep .art .st{stroke:var(--hero-ink);fill:none}
+.deep h3{font-family:var(--f-display);font-size:2.4rem;text-transform:uppercase;margin:0 0 6px;line-height:1}
+.deep p{color:var(--mute);margin:0}
+@media (max-width:760px){.deep{grid-template-columns:1fr}}
+
+/* exit */
+.exit .mail{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:8px 0 20px}
+.exit .mail code{font-family:var(--f-display);font-size:clamp(1.6rem,5vw,2.8rem);font-weight:600;user-select:all;overflow-wrap:anywhere}
+footer{padding-block:20px 36px;color:var(--mute)}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+footer a{color:var(--water);text-decoration:none}
+body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<nav class="gauge" aria-label="Sections">
+  <span class="lvl" id="lvl"></span>
+  <ol id="gauge"></ol>
+</nav>
+
+<header class="hero" id="shallow">
+  <canvas id="water" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <span class="depth"><b>0.9 m</b> Shallow end</span>
+    <h1>Adam<br>Abutaleb</h1>
+    <p class="lede">Computer Science and Mathematics student at Worcester State University. Looking for a software engineering internship for Summer&nbsp;2027.</p>
+    <div class="splits"><span>4.0 GPA</span><span>Dean's List ×2</span><span>Class of 2029</span><span>Java · Python</span></div>
+    <div class="cta">
+      <a class="pill solid" href="#projects">See my projects ↓</a>
+      <a class="pill" href="https://github.com/adam-abutaleb" target="_blank" rel="noopener">GitHub ↗</a>
+      <a class="pill" href="https://www.linkedin.com/in/adam-a-372943383" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+  </div>
+</header>
+<div class="rope" aria-hidden="true"></div>
+
+<main>
+<section class="pool" id="lanes">
+  <div class="wrap">
+    <div class="head"><span class="depth"><b>1.2 m</b> Swim lanes</span><h2>Where I've been</h2>
+      <p>School, work and the teams I've been part of. Each lane is one of them, drawn as long as it lasted. Click a lane to read about it.</p></div>
+    <div class="chips" id="laneChips"></div>
+    <div class="card lanes"><svg id="laneSvg" viewBox="0 0 900 300" role="img" aria-label="Timeline of school, work and teams"></svg></div>
+    <div class="key"><span><i style="background:var(--water)"></i>work</span><span><i style="background:var(--rope-b)"></i>school</span><span><i style="background:var(--rope-a)"></i>teams &amp; clubs</span><span>Dotted: still ahead</span></div>
+    <div class="entries" id="entries"></div>
+  </div>
+</section>
+<div class="rope" aria-hidden="true"></div>
+
+<section class="pool" id="projects">
+  <div class="wrap">
+    <div class="head"><span class="depth"><b>1.5 m</b> Projects</span><h2>Things I've built</h2>
+      <p>Both live on my GitHub. Each card has a small working version you can try right here.</p></div>
+    <div class="projects">
+      <article class="card proj">
+        <div class="lane"><span class="mono">LANE 4 · FALL 2025 – SPRING 2026</span><b>04</b></div>
+        <h3>Fitness Center Management System</h3>
+        <p>A multi-class Java application that manages gym members and trainers for up to 100 users. Members rate trainers in a 2D array; the program averages each trainer's score and ranks them. It also handles input validation, overtime pay, BMI classification, activity levels, salary projections and bonus eligibility.</p>
+        <div class="stack"><span>Java</span><span>OOP</span><span>2D arrays</span><span>Git / GitLab</span></div>
+        <div class="demo">
+          <div class="cap"><span class="mono">TRY IT · RATINGS MATRIX</span><span class="mono">sample data</span></div>
+          <table class="matrix" id="matrix"></table>
+          <div class="rank" id="rank"></div>
+          <div><button class="small-btn" id="sortBtn">Average and rank trainers</button> <button class="small-btn" id="shuffleBtn">New ratings</button></div>
+        </div>
+        <div class="links"><a href="https://github.com/adam-abutaleb/fitness-center-management-project" target="_blank" rel="noopener">Code on GitHub ↗</a></div>
+      </article>
+      <article class="card proj">
+        <div class="lane"><span class="mono">LANE 5 · SELF-TAUGHT</span><b>05</b></div>
+        <h3>Tic-Tac-Toe</h3>
+        <p>A two-player terminal game in Python, built outside of class to practise the fundamentals. The board is a 2D list, wins are checked across rows, columns and diagonals, and bad input (letters, out-of-range squares, taken squares) never crashes it.</p>
+        <div class="stack"><span>Python</span><span>2D lists</span><span>Input validation</span><span>Terminal</span></div>
+        <div class="demo">
+          <div class="cap"><span class="mono">TRY IT · SAME RULES, IN THE BROWSER</span><button class="small-btn" id="tttReset">New game</button></div>
+          <div class="ttt" id="ttt"></div>
+          <div class="status" id="tttStatus" aria-live="polite"></div>
+        </div>
+        <div class="links"><a href="https://github.com/adam-abutaleb/TicTacToe" target="_blank" rel="noopener">Code on GitHub ↗</a></div>
+      </article>
+    </div>
+  </div>
+</section>
+<div class="rope" aria-hidden="true"></div>
+
+<section class="pool" id="log">
+  <div class="wrap">
+    <div class="head"><span class="depth"><b>1.8 m</b> Training log</span><h2>Coursework</h2>
+      <p>B.S. in Computer Science and B.S. in Mathematics, Worcester State University, expected May 2029.</p></div>
+    <div class="log">
+      <div class="card"><h3>Completed</h3><ul id="done"></ul></div>
+      <div class="card"><h3>In the water now · Fall 2026</h3><ul id="now"></ul></div>
+    </div>
+  </div>
+</section>
+<div class="rope" aria-hidden="true"></div>
+
+<section class="pool" id="results">
+  <div class="wrap">
+    <div class="head"><span class="depth"><b>2.1 m</b> Results board</span><h2>Results</h2>
+      <p>Grades, promotions and certifications.</p></div>
+    <div class="chips" id="resChips"></div>
+    <div class="card board"><table><thead><tr><th>#</th><th>EVENT</th><th>MARK</th><th>WHEN</th></tr></thead><tbody id="resRows"></tbody></table></div>
+  </div>
+</section>
+<div class="rope" aria-hidden="true"></div>
+
+<section class="pool" id="toolkit">
+  <div class="wrap">
+    <div class="head"><span class="depth"><b>2.4 m</b> Toolkit</span><h2>Skills &amp; tools</h2>
+      <p>Pick one. The heat sheet lists where I've actually used it.</p></div>
+    <div class="kit">
+      <div id="groups"></div>
+      <aside class="card heat" id="heat" aria-live="polite"></aside>
+    </div>
+  </div>
+</section>
+<div class="rope" aria-hidden="true"></div>
+
+<section class="pool" id="deep">
+  <div class="wrap">
+    <div class="head"><span class="depth"><b>3.0 m</b> Deep end</span><h2>In the pool</h2>
+      <p>Away from the keyboard, I'm in the water. Three ways I spend time there.</p></div>
+    <div class="strokes" id="strokes"></div>
+    <div class="deep" id="deepBody"></div>
+  </div>
+</section>
+<div class="rope" aria-hidden="true"></div>
+
+<section class="pool exit" id="exit">
+  <div class="wrap">
+    <div class="head"><span class="depth"><b>↑</b> Exit ladder</span><h2>Let's talk</h2>
+      <p>I'm looking for a software engineering internship for Summer 2027. If you have a role, a project, or just a question, email me.</p></div>
+    <div class="mail"><code id="email">aabutaleb2007@gmail.com</code><button class="small-btn" id="copy">Copy email</button></div>
+    <div class="links">
+      <a href="https://github.com/adam-abutaleb" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="https://www.linkedin.com/in/adam-a-372943383" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+  </div>
+</section>
+</main>
+<footer><div class="wrap mono"><span>Built by Adam Abutaleb · Worcester, MA · 2026</span><a href="#shallow">Back to the shallow end ↑</a></div></footer>
+
+<script>
+/* ===== CONTENT ===== */
+const SECTIONS=[["shallow","0.9","Shallow end"],["lanes","1.2","Swim lanes"],["projects","1.5","Projects"],["log","1.8","Coursework"],["results","2.1","Results"],["toolkit","2.4","Toolkit"],["deep","3.0","Deep end"],["exit","↑","Contact"]];
+const LANES=[
+ {id:"wsu",kind:"school",name:"Worcester State",title:"B.S. Computer Science & B.S. Mathematics",org:"Worcester State University · Worcester, MA",start:"2025-09",end:"2029-05",dates:"Sep 2025 — May 2029 (expected)",
+  points:["4.0 / 4.0 GPA","Dean's List, Fall 2025 and Spring 2026","Double major in Computer Science and Mathematics"]},
+ {id:"gss",kind:"work",name:"Goldfish Swim",title:"Golden Teacher · Swim Instructor & Lifeguard",org:"Goldfish Swim School · Marlboro, MA",start:"2024-07",end:null,dates:"Jul 2024 — Present",
+  points:["Promoted to Golden Teacher, a title given to top-performing instructors","Train and mentor new instructors as part of their onboarding","Teach children ages 3–12 across skill levels, up to 4 at a time, and report progress to parents","Keep the pool deck safe as a certified lifeguard"]},
+ {id:"swim",kind:"team",name:"Varsity Swim",title:"Varsity Athlete",org:"Shrewsbury High School Swim Team",start:"2024-12",end:"2025-02",dates:"Dec 2024 — Feb 2025",
+  points:["Trained and competed at the varsity level"]},
+ {id:"msa",kind:"team",name:"MSA",title:"Member",org:"Muslim Student Association · Shrewsbury High School",start:"2022-02",end:"2025-03",dates:"Feb 2022 — Mar 2025",
+  points:["Weekly meetings over three years","Helped plan community events"]}
+];
+const COURSES_DONE=["CS Fundamentals","Programming Fundamentals","Calculus I"];
+const COURSES_NOW=["Data Structures & Algorithms","Probability & Statistics","Discrete Structures","Database Design","Calculus II"];
+const RESULTS=[
+ {k:"school",ev:"Grade point average",sub:"Worcester State University, CS & Math",mk:"4.0 / 4.0",wh:"2025 – 2026"},
+ {k:"school",ev:"Dean's List",sub:"Worcester State University",mk:"Named",wh:"Spring 2026"},
+ {k:"school",ev:"Dean's List",sub:"Worcester State University",mk:"Named",wh:"Fall 2025"},
+ {k:"pool",ev:"Golden Teacher",sub:"Goldfish Swim School: top-performing instructors",mk:"Promoted",wh:"2024 – now"},
+ {k:"pool",ev:"Varsity swimmer",sub:"Shrewsbury High School",mk:"Competed",wh:"2024 – 2025"},
+ {k:"cert",ev:"Lifeguard",sub:"Pool deck safety and emergency response",mk:"Certified",wh:"Current"},
+ {k:"cert",ev:"CPR · AED · First Aid",sub:"Three certifications",mk:"Certified",wh:"Current"}
+];
+const SKILLS={
+ "Languages":{"Java":["fit"],"Python":["ttt"],"HTML":["site"],"CSS":["site"],"JavaScript":["site"]},
+ "Concepts":{"Object-oriented programming":["fit"],"Data structures":["fit","ttt"],"Algorithms":["fit","ttt"],"Debugging":["fit","ttt"],"Version control":["fit","ttt"]},
+ "Tools":{"Git":["fit","ttt"],"GitLab":["fit"],"VS Code":["fit","ttt","site"],"Command line / Unix":["ttt"]}
+};
+const USES={fit:["Fitness Center Management System","Java · encapsulation, 2D-array ratings, sorting"],ttt:["Tic-Tac-Toe","Python · 2D list board, win detection"],site:["This website","the page you're reading"]};
+const STROKES=[
+ {name:"Teaching",title:"Teaching",text:"I teach kids ages 3–12 to swim at Goldfish Swim School, from first-time floaters to kids learning their strokes. I was promoted to Golden Teacher and now help train new instructors.",art:"teach"},
+ {name:"Lifeguarding",title:"Lifeguarding",text:"As a certified lifeguard (with CPR, AED and First Aid) I watch the pool deck and follow emergency procedures. It takes constant attention, which carries straight over to debugging.",art:"guard"},
+ {name:"Racing",title:"Racing",text:"I swam varsity for Shrewsbury High School, training and competing while keeping up a full course load.",art:"race"}
+];
+/* ===== end content ===== */
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const KIND={work:"work",school:"school",team:"teams & clubs"};
+
+/* depth gauge navigation */
+$("#gauge").innerHTML=SECTIONS.map(([id,d,n])=>`<li><a href="#${id}" data-id="${id}"><span class="nm">${n}</span>${d==="↑"?"exit":d+" m"}<span class="tk"></span></a></li>`).join("");
+const gaugeLinks=[...document.querySelectorAll(".gauge a")];
+function onScroll(){
+  let cur=SECTIONS[0][0];
+  for(const [id] of SECTIONS){const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<innerHeight*.4)cur=id;}
+  gaugeLinks.forEach(a=>a.setAttribute("aria-current",a.dataset.id===cur?"true":"false"));
+  const max=document.documentElement.scrollHeight-innerHeight,p=max>0?scrollY/max:0,ol=$("#gauge");
+  $("#lvl").style.height=(p*ol.offsetHeight)+"px";
+}
+addEventListener("scroll",onScroll,{passive:true});addEventListener("resize",onScroll);onScroll();
+
+/* hero water: tile grid seen through moving caustic light */
+(function(){
+  const c=$("#water"),x=c.getContext("2d");let w,h,rgb="255,255,255",frame=0;
+  const still=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function size(){const r=c.getBoundingClientRect(),d=devicePixelRatio||1;w=r.width;h=r.height;c.width=w*d;c.height=h*d;x.setTransform(d,0,0,d,0,0);}
+  function draw(t){
+    if(!(frame++%30)) rgb=getComputedStyle(document.documentElement).getPropertyValue("--caustic").trim()||rgb;
+    x.clearRect(0,0,w,h);const s=t/1000;
+    x.strokeStyle=`rgba(${rgb},.10)`;x.lineWidth=1;
+    for(let gx=0;gx<w;gx+=48){x.beginPath();for(let y=0;y<=h;y+=12)x.lineTo(gx+Math.sin(y/40+s*1.3)*3,y);x.stroke();}
+    for(let gy=0;gy<h;gy+=48){x.beginPath();for(let xx=0;xx<=w;xx+=12)x.lineTo(xx,gy+Math.sin(xx/40+s*1.1)*3);x.stroke();}
+    x.lineWidth=2;
+    for(let i=0;i<14;i++){x.strokeStyle=`rgba(${rgb},${.10+.06*Math.sin(s+i)})`;x.beginPath();
+      for(let xx=-20;xx<=w+20;xx+=14){const y=(i/14)*h+Math.sin(xx/70+s*.9+i*1.7)*16+Math.sin(xx/23-s*1.4+i)*5;xx<0?x.moveTo(xx,y):x.lineTo(xx,y);}x.stroke();}
+    for(let i=0;i<18;i++){x.strokeStyle=`rgba(${rgb},${.07+.05*Math.cos(s*1.2+i)})`;x.beginPath();
+      for(let y=-20;y<=h+20;y+=14){const xx=(i/18)*w+Math.sin(y/60-s*.8+i*2.1)*18+Math.sin(y/19+s*1.6+i)*5;y<0?x.moveTo(xx,y):x.lineTo(xx,y);}x.stroke();}
+    if(!still)requestAnimationFrame(draw);
+  }
+  size();addEventListener("resize",size);requestAnimationFrame(draw);
+})();
+
+/* swim lanes */
+let laneFilter="all";
+const mi=s=>{const[y,m]=s.split("-").map(Number);return y*12+m-1};
+const NOW=mi("2026-11");
+function chips(el,list,cur,on){el.innerHTML=list.map(([k,l,n])=>`<button class="chip" data-k="${k}" aria-pressed="${k===cur}">${l}<span>${n}</span></button>`).join("");el.onclick=e=>{const b=e.target.closest(".chip");if(b)on(b.dataset.k)};}
+function renderLanes(){
+  chips($("#laneChips"),[["all","everything",LANES.length],...["work","school","team"].map(k=>[k,KIND[k],LANES.filter(l=>l.kind===k).length])],laneFilter,k=>{laneFilter=k;renderLanes()});
+  const t0=mi("2022-01"),t1=mi("2029-07"),L=170,R=880,top=34,lh=58,H=top+LANES.length*lh+30;
+  $("#laneSvg").setAttribute("viewBox",`0 0 900 ${H}`);
+  const X=m=>L+(m-t0)/(t1-t0)*(R-L);let s="";
+  for(let y=2022;y<=2029;y++){const xx=X(y*12);s+=`<line class="grid" x1="${xx}" x2="${xx}" y1="${top-8}" y2="${H-24}"/><text x="${xx}" y="${H-8}" text-anchor="middle">${y}</text>`;}
+  const rope=y=>{let r="";for(let xx=L,i=0;xx<=R;xx+=12,i++)r+=`<circle class="${(i%6<3)?"float-a":"float-b"}" cx="${xx}" cy="${y}" r="3"/>`;return r};
+  s+=rope(top-4);
+  LANES.forEach((l,i)=>{
+    const yc=top+i*lh+lh/2-2,show=laneFilter==="all"||l.kind===laneFilter;
+    const a=X(mi(l.start)),endM=l.end?mi(l.end)+1:NOW,b=X(Math.min(endM,NOW)),bEnd=X(endM);
+    s+=`<text class="lnum" x="0" y="${yc+7}">${i+1}</text><text class="lname" x="26" y="${yc+5}">${esc(l.name)}</text>`;
+    s+=`<g class="swim k-${l.kind}" data-id="${l.id}" tabindex="0" role="button" aria-label="${esc(l.title)}, ${esc(l.dates)}" style="opacity:${show?1:.15}">
+        <line class="bar" x1="${a}" x2="${Math.max(a+2,b)}" y1="${yc}" y2="${yc}"/>
+        ${endM>NOW?`<line class="bar ahead" x1="${b}" x2="${bEnd}" y1="${yc}" y2="${yc}"/>`:""}
+        ${l.end?"":`<circle class="head-dot" cx="${b+12}" cy="${yc}" r="5"/>`}
+        <rect x="${a-8}" y="${yc-18}" width="${Math.max(bEnd,b+20)-a+16}" height="36" fill="transparent"/></g>`;
+    s+=rope(top+(i+1)*lh-4);
+  });
+  const nx=X(NOW);s+=`<line class="now" x1="${nx}" x2="${nx}" y1="${top-16}" y2="${H-24}" stroke-dasharray="4 3"/><text class="nowt" x="${nx}" y="${top-20}" text-anchor="middle">NOW</text>`;
+  $("#laneSvg").innerHTML=s;
+  $("#entries").innerHTML=LANES.filter(l=>laneFilter==="all"||l.kind===laneFilter).map(l=>`<article class="card entry" id="e-${l.id}">
+    <div class="top mono"><span>${KIND[l.kind].toUpperCase()}</span><span>${esc(l.dates)}</span></div>
+    <h3>${esc(l.title)}</h3><div class="org">${esc(l.org)}</div><ul>${l.points.map(p=>`<li>${esc(p)}</li>`).join("")}</ul></article>`).join("");
+}
+function jump(id){if(!document.getElementById("e-"+id)){laneFilter="all";renderLanes();}
+  const el=document.getElementById("e-"+id);el.scrollIntoView({block:"center"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1600);}
+$("#laneSvg").addEventListener("click",e=>{const g=e.target.closest(".swim");if(g)jump(g.dataset.id)});
+$("#laneSvg").addEventListener("keydown",e=>{const g=e.target.closest(".swim");if(g&&(e.key==="Enter"||e.key===" ")){e.preventDefault();jump(g.dataset.id)}});
+renderLanes();
+
+/* fitness center demo: members x trainers ratings matrix */
+const TRAINERS=["Maya","Jordan","Priya"],MEMBERS=["M-01","M-02","M-03","M-04"];
+let ratings=[[5,3,4],[4,2,5],[5,3,4],[3,4,5]];
+function renderMatrix(){
+  const avg=TRAINERS.map((_,j)=>ratings.reduce((s,r)=>s+r[j],0)/ratings.length);
+  $("#matrix").innerHTML=`<thead><tr><th></th>${TRAINERS.map(t=>`<th>${t}</th>`).join("")}</tr></thead>
+    <tbody>${ratings.map((r,i)=>`<tr><th>${MEMBERS[i]}</th>${r.map(v=>`<td>${v}</td>`).join("")}</tr>`).join("")}</tbody>
+    <tfoot><tr><th>avg</th>${avg.map(a=>`<td>${a.toFixed(2)}</td>`).join("")}</tr></tfoot>`;
+  return avg;
+}
+function rank(){const avg=renderMatrix();const order=TRAINERS.map((t,j)=>[t,avg[j]]).sort((a,b)=>b[1]-a[1]);
+  $("#rank").innerHTML=order.map(([t,a],i)=>`<div><span>${i+1}. ${t}</span><i style="width:0"></i><em>${a.toFixed(2)}</em></div>`).join("");
+  requestAnimationFrame(()=>[...document.querySelectorAll("#rank i")].forEach((el,i)=>el.style.width=(order[i][1]/5*100)+"%"));}
+$("#sortBtn").onclick=rank;
+$("#shuffleBtn").onclick=()=>{ratings=ratings.map(r=>r.map(()=>1+Math.floor(Math.random()*5)));renderMatrix();$("#rank").innerHTML="";};
+renderMatrix();rank();
+
+/* tic-tac-toe demo */
+let board,turn,over;
+const LINES=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+function tttRender(win){
+  $("#ttt").innerHTML=board.map((v,i)=>`<button data-i="${i}" class="${v?v.toLowerCase():""} ${win&&win.includes(i)?"win":""}" aria-label="Square ${i+1}${v?", "+v:""}">${v||""}</button>`).join("");
+}
+function tttReset(){board=Array(9).fill("");turn="X";over=false;tttRender();$("#tttStatus").textContent="Player X's turn";}
+$("#ttt").onclick=e=>{const b=e.target.closest("button");if(!b||over)return;const i=+b.dataset.i;
+  if(board[i]){$("#tttStatus").textContent="That square is taken. Pick another.";return;}
+  board[i]=turn;const win=LINES.find(l=>l.every(k=>board[k]===turn));
+  if(win){over=true;tttRender(win);$("#tttStatus").textContent=`Player ${turn} wins!`;return;}
+  if(board.every(Boolean)){over=true;tttRender();$("#tttStatus").textContent="It's a tie.";return;}
+  turn=turn==="X"?"O":"X";tttRender();$("#tttStatus").textContent=`Player ${turn}'s turn`;};
+$("#tttReset").onclick=tttReset;tttReset();
+
+/* coursework */
+$("#done").innerHTML=COURSES_DONE.map(c=>`<li class="done"><i></i>${esc(c)}</li>`).join("");
+$("#now").innerHTML=COURSES_NOW.map(c=>`<li class="now"><i></i>${esc(c)}</li>`).join("");
+
+/* results board */
+let resFilter="all";const RK={school:"academics",pool:"pool deck",cert:"certifications"};
+function renderResults(){
+  chips($("#resChips"),[["all","everything",RESULTS.length],...Object.keys(RK).map(k=>[k,RK[k],RESULTS.filter(r=>r.k===k).length])],resFilter,k=>{resFilter=k;renderResults()});
+  $("#resRows").innerHTML=RESULTS.filter(r=>resFilter==="all"||r.k===resFilter).map((r,i)=>`<tr><td class="pl">${i+1}</td><td class="ev"><b>${esc(r.ev)}</b><span>${esc(r.sub)}</span></td><td class="mk">${esc(r.mk)}</td><td class="wh">${esc(r.wh)}</td></tr>`).join("");
+}
+renderResults();
+
+/* toolkit + heat sheet */
+let tool="Java";
+function renderKit(){
+  $("#groups").innerHTML=Object.entries(SKILLS).map(([g,ts])=>`<div class="group"><h3>${esc(g)}</h3><div class="tags">${Object.keys(ts).map(t=>`<button class="tag" data-t="${esc(t)}" aria-pressed="${t===tool}">${esc(t)}</button>`).join("")}</div></div>`).join("");
+  const g=Object.keys(SKILLS).find(k=>tool in SKILLS[k]),used=SKILLS[g][tool];
+  $("#heat").innerHTML=`<span class="mono">HEAT SHEET · ${esc(g.toUpperCase())}</span><h3>${esc(tool)}</h3><ol>${used.map((u,i)=>`<li><b>${i+1}</b><div>${esc(USES[u][0])}<small>${esc(USES[u][1])}</small></div></li>`).join("")}</ol>`;
+}
+$("#groups").addEventListener("click",e=>{const b=e.target.closest(".tag");if(b){tool=b.dataset.t;renderKit()}});
+renderKit();
+
+/* deep end */
+const ART={
+ teach:'<rect class="w2" width="400" height="250"/><rect class="w1" width="400" height="120" opacity=".6"/><g class="ink"><circle cx="150" cy="110" r="14"/><circle cx="230" cy="125" r="9"/><circle cx="265" cy="130" r="9"/><circle cx="300" cy="125" r="9"/></g><rect class="ra" x="205" y="140" width="110" height="14" rx="7"/>',
+ guard:'<rect class="w2" width="400" height="250"/><rect class="w1" y="150" width="400" height="100" opacity=".6"/><rect class="ink" x="90" y="60" width="10" height="110"/><rect class="ink" x="130" y="60" width="10" height="110"/><rect class="ink" x="80" y="56" width="70" height="10" rx="3"/><circle class="ra" cx="290" cy="110" r="34"/><circle class="w2" cx="290" cy="110" r="18"/>',
+ race:'<rect class="w2" width="400" height="250"/>'+[0,1,2,3].map(i=>`<g>${Array.from({length:34},(_,k)=>`<circle class="${k%6<3?"ra":"rb"}" cx="${6+k*12}" cy="${50+i*55}" r="4"/>`).join("")}</g>`).join("")+'<path class="st" stroke-width="3" d="M40 105 q30 -14 60 0 t60 0 t60 0"/><circle class="ink" cx="232" cy="104" r="9"/>'
+};
+let si=0;
+function renderDeep(){
+  $("#strokes").innerHTML=STROKES.map((s,i)=>`<button class="chip" data-i="${i}" aria-pressed="${i===si}">${esc(s.name)}</button>`).join("");
+  const s=STROKES[si];$("#deepBody").innerHTML=`<div class="art"><svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${ART[s.art]}</svg></div><div><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></div>`;
+}
+$("#strokes").addEventListener("click",e=>{const b=e.target.closest(".chip");if(b){si=+b.dataset.i;renderDeep()}});
+renderDeep();
+
+/* copy email */
+$("#copy").onclick=()=>{const t=$("#email").textContent,b=$("#copy");
+  const sel=()=>{const r=document.createRange();r.selectNodeContents($("#email"));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Selected, press Ctrl+C"};
+  try{navigator.clipboard.writeText(t).then(()=>{b.textContent="Copied"},sel)}catch(e){sel()}
+  setTimeout(()=>b.textContent="Copy email",2200);};
+</script>
+</body>
+</html>
